@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Buyer Dashboard — KhedutConnect</title>
+  <link rel="stylesheet" href="../css/dashboard.css">
+</head>
+<body data-role="buyer">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo"><img src="../assets/khedut-logo.png" alt="KhedutConnect" width="42" height="42"><span class="logo-text">KhedutConnect</span></div>
+    <nav class="sidebar-nav">
+      <div class="nav-item active" onclick="showSection('overview')">📊 <span>Overview</span></div>
+      <div class="nav-item" onclick="showSection('marketplace')">🛒 <span>Marketplace</span></div>
+      <div class="nav-item" onclick="showSection('orders')">📦 <span>My Orders</span></div>
+      <div class="nav-item" onclick="showSection('wishlist')">❤️ <span>Wishlist</span></div>
+      <div class="nav-item" onclick="showSection('bookings')">🚜 <span>Equipment Booking</span></div>
+      <div class="nav-item" onclick="showSection('chat')">💬 <span>Chat</span></div>
+      <div class="nav-item" onclick="showSection('profile')">👤 <span>Profile</span></div>
+    </nav>
+    <div class="sidebar-logout" onclick="logout()">🚪 <span>Logout</span></div>
+  </aside>
+
+  <main class="main-content">
+    <header class="topbar">
+      <div class="topbar-left"><button class="menu-btn" onclick="toggleSidebar()">☰</button><h1 class="page-title" id="pageTitle">Overview</h1></div>
+      <div class="topbar-right"><button id="themeToggle" onclick="toggleTheme()">🌙 Dark Mode</button><div class="user-info"><span class="user-avatar" id="userAvatar">B</span><span class="user-name" id="userName">Buyer</span></div></div>
+    </header>
+
+    <section class="section active" id="sec-overview">
+      <div class="stats-grid">
+        <div class="stat-card green"><div class="stat-icon">📦</div><div class="stat-info"><div class="stat-num" id="totalOrders">0</div><div class="stat-label">Total Orders</div></div></div>
+        <div class="stat-card blue"><div class="stat-icon">❤️</div><div class="stat-info"><div class="stat-num" id="totalWishlist">0</div><div class="stat-label">Wishlist Items</div></div></div>
+        <div class="stat-card orange"><div class="stat-icon">🌾</div><div class="stat-info"><div class="stat-num" id="totalProducts">0</div><div class="stat-label">Products Available</div></div></div>
+        <div class="stat-card purple"><div class="stat-icon">🚜</div><div class="stat-info"><div class="stat-num" id="totalBookings">0</div><div class="stat-label">Equipment Bookings</div></div></div>
+      </div>
+      <div class="quick-actions"><h2>Quick Actions</h2><div class="action-grid">
+        <button class="action-btn" onclick="showSection('marketplace')">🛒 Browse Products</button>
+        <button class="action-btn" onclick="openBulkOrderModal()">🤝 Multi-Farmer Order</button>
+        <button class="action-btn" onclick="showSection('bookings')">🚜 Book Equipment</button>
+        <button class="action-btn" onclick="showSection('chat')">💬 Messages</button>
+      </div></div>
+      <div class="recent-section"><h2>Featured Products</h2><div class="products-grid" id="featuredProducts"><div class="empty-state"><div class="empty-icon">🌾</div><p>Loading products...</p></div></div></div>
+    </section>
+
+    <section class="section" id="sec-marketplace">
+      <div class="section-header"><div><h2>🛒 Marketplace</h2><p class="section-subtitle">Buy real produce shown by farmers with crop photos and details.</p></div></div>
+      <div class="search-bar marketplace-filters">
+        <input type="search" id="searchInput" placeholder="🔍 Crop, location or description" oninput="filterProducts()">
+        <select id="categoryFilter" onchange="filterProducts()"><option value="">All Categories</option><option value="vegetables">Vegetables</option><option value="fruits">Fruits</option><option value="grains">Grains</option><option value="dairy">Dairy</option><option value="organic">Organic</option><option value="other">Other</option></select>
+        <select id="qualityFilter" onchange="filterProducts()"><option value="">All Quality</option><option value="standard">Standard</option><option value="premium">Premium</option><option value="organic">Organic</option></select>
+        <select id="sortFilter" onchange="filterProducts()"><option value="newest">Newest</option><option value="price_asc">Price: Low to High</option><option value="price_desc">Price: High to Low</option><option value="quantity_desc">Most Stock</option></select>
+      </div>
+      <div class="products-grid" id="marketplaceProducts"></div>
+    </section>
+
+    <section class="section" id="sec-orders">
+      <div class="section-header bulk-order-header"><div><h2>📦 My Orders</h2><p class="section-subtitle">Track direct and multi-farmer orders in one place.</p></div><button class="btn-primary" onclick="openBulkOrderModal()">➕ Multi-Farmer Order</button></div>
+      <div class="judge-feature-banner"><div class="judge-feature-icon">🤝</div><div><strong>Smart Split Fulfillment</strong><p>One large requirement can be reserved and divided across multiple matching farmers.</p></div></div>
+      <h3 class="order-group-title">Multi-Farmer Orders</h3><div class="orders-list" id="bulkOrdersList"></div>
+      <h3 class="order-group-title">Direct Product Orders</h3><div class="orders-list" id="ordersList"></div>
+    </section>
+
+    <section class="section" id="sec-wishlist"><h2>❤️ My Wishlist</h2><div class="products-grid" id="wishlistGrid"></div></section>
+
+    <section class="section" id="sec-bookings">
+      <div class="section-header"><div><h2>🚜 Equipment Booking</h2><p class="section-subtitle">Request farm machinery with transparent hourly pricing.</p></div></div>
+      <div class="dashboard-two-column">
+        <form class="dashboard-form" id="bookingForm">
+          <h3>New Booking</h3>
+          <div class="form-group"><label for="bookingService">Equipment</label><select id="bookingService" onchange="updateBookingEstimate()"><option value="tractor">Tractor</option><option value="harvester">Harvester</option><option value="rotavator">Rotavator</option><option value="cultivator">Cultivator</option><option value="sprayer">Sprayer</option><option value="other">Other</option></select></div>
+          <div class="form-row-2"><div class="form-group"><label for="bookingDate">Date</label><input type="date" id="bookingDate" required></div><div class="form-group"><label for="bookingTime">Time</label><input type="time" id="bookingTime" required></div></div>
+          <div class="form-row-2"><div class="form-group"><label for="bookingHours">Hours</label><input type="number" id="bookingHours" min="1" max="24" value="2" oninput="updateBookingEstimate()"></div><div class="form-group"><label for="bookingArea">Area (optional acres)</label><input type="number" id="bookingArea" min="0" step="0.1"></div></div>
+          <div class="form-group"><label for="bookingLocation">Location</label><input id="bookingLocation" placeholder="Village, taluka, district" required></div>
+          <div class="form-group"><label for="bookingNote">Note</label><textarea id="bookingNote" rows="3" placeholder="Work details or attachment required"></textarea></div>
+          <div class="booking-estimate" id="bookingEstimate">Estimated total: ₹0</div>
+          <button class="btn-primary" id="bookingSubmitBtn" type="submit">Book Equipment</button>
+        </form>
+        <div><h3>My Bookings</h3><div class="orders-list" id="bookingsList"></div></div>
+      </div>
+    </section>
+
+    <section class="section" id="sec-chat">
+      <div class="section-header"><div><h2 id="chatTitle">💬 Chat</h2><p class="section-subtitle">Contacts are generated from your orders—no MongoDB ID copying.</p></div></div>
+      <div class="chat-layout">
+        <div class="form-group"><label for="chatContactSelect">Farmer</label><select id="chatContactSelect" onchange="selectChatContact(this.value)"><option value="">Select a farmer</option></select></div>
+        <input type="hidden" id="chatUserId">
+        <div id="chatMessages" class="chat-messages"><div class="empty-state"><p>Select a farmer to start chatting.</p></div></div>
+        <div class="chat-compose"><input type="text" id="chatInput" placeholder="Type a message" maxlength="1000"><button class="btn-primary" onclick="sendMessage()">Send</button></div>
+      </div>
+    </section>
+
+    <section class="section" id="sec-profile">
+      <h2>My Profile</h2>
+      <div class="profile-card"><div class="profile-avatar-large" id="profileAvatar">B</div><div class="profile-info"><h3 id="profileName">Buyer</h3><p id="profileEmail"></p><p id="profileLocation"></p><p id="profilePhone"></p><span class="role-badge buyer">🛒 Buyer</span></div></div>
+      <div class="dashboard-two-column profile-edit-grid">
+        <form class="dashboard-form" id="profileForm"><h3>Edit Profile</h3><div class="form-group"><label>Name</label><input id="profileNameInput" required></div><div class="form-group"><label>Phone</label><input id="profilePhoneInput"></div><div class="form-group"><label>Location</label><input id="profileLocationInput"></div><div class="form-group"><label>Preferred Language</label><select id="profileLanguageInput"><option value="gu">ગુજરાતી</option><option value="en">English</option><option value="hi">हिन्दी</option></select></div><button class="btn-primary" id="saveProfileBtn">Save Profile</button></form>
+        <form class="dashboard-form" id="passwordForm"><h3>Change Password</h3><div class="form-group"><label>Current Password</label><input type="password" id="currentPassword" required></div><div class="form-group"><label>New Password</label><input type="password" id="newPassword" minlength="6" required></div><div class="form-group"><label>Confirm New Password</label><input type="password" id="confirmNewPassword" minlength="6" required></div><button class="btn-primary" id="changePasswordBtn">Change Password</button></form>
+      </div>
+    </section>
+  </main>
+
+  <div class="modal-overlay" id="productModal"><div class="modal"><div class="modal-header"><h3 id="modalProductName">Product</h3><button class="modal-close" onclick="closeModal()">✕</button></div><div class="modal-body"><div id="modalProductVisual"></div><div class="product-detail-price" id="modalProductPrice"></div><p id="modalProductDesc"></p><div class="info-rows"><div class="info-row-item">📍 <span id="modalLocation"></span></div><div class="info-row-item">📦 <span id="modalQuantity"></span></div><div class="info-row-item">👨‍🌾 <span id="modalFarmer"></span></div><div class="info-row-item">⭐ <span id="modalQuality"></span></div></div><div class="modal-action-row"><button class="btn-primary" onclick="openDirectOrderModal()">🛒 Place Order</button><button class="btn-secondary" onclick="addToWishlist()">❤️ Wishlist</button><button class="btn-secondary" onclick="openChat(selectedProduct.farmer?._id, selectedProduct.farmer?.name)">💬 Chat</button></div></div></div></div>
+
+  <div class="modal-overlay" id="directOrderModal"><div class="modal"><div class="modal-header"><h3>Place Direct Order</h3><button class="modal-close" onclick="closeModal()">✕</button></div><div class="modal-body"><p id="directOrderSummary"></p><div class="form-group"><label>Quantity</label><input type="number" id="directOrderQuantity" min="0.01" step="0.01" oninput="updateDirectOrderTotal()"></div><div class="form-group"><label>Message (optional)</label><textarea id="directOrderMessage" rows="3"></textarea></div><div class="booking-estimate" id="directOrderTotal"></div><button class="btn-primary" id="directOrderSubmitBtn" onclick="createOrder()">Confirm Order</button></div></div></div>
+
+  <div class="modal-overlay" id="bulkOrderModal"><div class="modal bulk-order-modal"><div class="modal-header"><div><h3>🤝 Create Multi-Farmer Order</h3><p class="modal-subtitle">Preview exactly how the quantity will be split before placing it.</p></div><button class="modal-close" onclick="closeModal()">✕</button></div><div class="modal-body"><div class="bulk-form-grid">
+    <div class="form-group full-width"><label>Product / Crop Name</label><input id="bulkProductName" list="bulkProductSuggestions" placeholder="Example: Wheat" oninput="syncBulkProductDefaults()"><datalist id="bulkProductSuggestions"></datalist></div>
+    <div class="form-group"><label>Category</label><select id="bulkCategory"><option value="vegetables">Vegetables</option><option value="fruits">Fruits</option><option value="grains">Grains</option><option value="dairy">Dairy</option><option value="organic">Organic</option><option value="other">Other</option></select></div>
+    <div class="form-group"><label>Unit</label><select id="bulkUnit"><option value="kg">kg</option><option value="quintal">quintal</option><option value="ton">ton</option><option value="piece">piece</option><option value="dozen">dozen</option><option value="liter">liter</option></select></div>
+    <div class="form-group"><label>Required Quantity</label><input id="bulkQuantity" type="number" min="0.01" step="0.01"></div><div class="form-group"><label>Maximum Price / Unit</label><input id="bulkMaxPrice" type="number" min="0" step="0.01"></div>
+    <div class="form-group full-width"><label>Delivery Location</label><input id="bulkDeliveryLocation"></div><div class="form-group"><label>Required By</label><input id="bulkRequiredBy" type="date"></div><div class="form-group"><label>Quality</label><select id="bulkQuality"><option value="standard">Standard</option><option value="premium">Premium</option><option value="organic">Organic</option></select></div>
+    <div class="form-group full-width"><label>Message</label><textarea id="bulkMessage" rows="3"></textarea></div>
+  </div><div id="bulkPreviewResult" class="bulk-preview-result"></div><div class="modal-action-row"><button class="btn-secondary" onclick="previewBulkOrder()">🔍 Preview Split</button><button class="btn-primary" id="bulkCreateBtn" onclick="createBulkOrder()">✅ Place Order</button></div></div></div></div>
+
+  <div class="modal-overlay" id="reviewModal"><div class="modal"><div class="modal-header"><h3>Review Product</h3><button class="modal-close" onclick="closeModal()">✕</button></div><div class="modal-body"><input type="hidden" id="reviewProductId"><div class="form-group"><label>Rating</label><select id="reviewRating"><option value="5">5 — Excellent</option><option value="4">4 — Good</option><option value="3">3 — Average</option><option value="2">2 — Poor</option><option value="1">1 — Very poor</option></select></div><div class="form-group"><label>Comment</label><textarea id="reviewComment" rows="4"></textarea></div><button class="btn-primary" onclick="submitReview()">Save Review</button></div></div></div>
+
+  <script src="../js/common.js"></script><script src="../js/i18n.js"></script><script src="../js/dashboard.js"></script><script src="../js/buyer.js"></script>
+</body>
+</html>

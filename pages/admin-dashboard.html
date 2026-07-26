@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard — KhedutConnect</title>
+  <link rel="stylesheet" href="../css/dashboard.css">
+</head>
+<body data-role="admin">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo">
+      <img src="../assets/khedut-logo.png" alt="KhedutConnect" width="42" height="42">
+      <span class="logo-text">KhedutConnect</span>
+    </div>
+    <nav class="sidebar-nav">
+      <button class="nav-item active" type="button" onclick="showSection('overview')">📊 <span>Overview</span></button>
+      <button class="nav-item" type="button" onclick="showSection('users')">👥 <span>Users & Admins</span></button>
+      <button class="nav-item" type="button" onclick="showSection('products')">🌱 <span>Products</span></button>
+      <button class="nav-item" type="button" onclick="showSection('orders')">📦 <span>Orders</span></button>
+      <button class="nav-item" type="button" onclick="showSection('bookings')">🚜 <span>Equipment Bookings</span></button>
+      <button class="nav-item" type="button" onclick="showSection('analytics')">📈 <span>Analytics</span></button>
+      <button class="nav-item" type="button" onclick="showSection('settings')">⚙️ <span>Settings</span></button>
+    </nav>
+    <button class="sidebar-logout" type="button" onclick="logout()">🚪 <span>Logout</span></button>
+  </aside>
+
+  <main class="main-content">
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="menu-btn" type="button" onclick="toggleSidebar()">☰</button>
+        <h1 class="page-title" id="pageTitle">Overview</h1>
+      </div>
+      <div class="topbar-right">
+        <button id="themeToggle" type="button" onclick="toggleTheme()">🌙 Dark Mode</button>
+        <div class="user-info">
+          <span class="user-avatar admin-avatar" id="userAvatar">A</span>
+          <span class="user-name" id="userName">Admin</span>
+        </div>
+      </div>
+    </header>
+
+    <section class="section active" id="sec-overview">
+      <div class="judge-feature-banner">
+        <div>
+          <span class="feature-kicker">SECURE ADMIN CONTROL</span>
+          <h2>One owner setup, then dashboard-managed admin accounts</h2>
+          <p>The first admin uses the private setup key. After that, only a signed-in admin can create another admin.</p>
+        </div>
+        <button class="btn-primary" type="button" onclick="openCreateUser('admin')">＋ Create Admin</button>
+      </div>
+
+      <div class="stats-grid">
+        <article class="stat-card green"><div class="stat-icon">👥</div><div class="stat-info"><div class="stat-num" id="totalUsers">0</div><div class="stat-label">Total Users</div></div></article>
+        <article class="stat-card blue"><div class="stat-icon">👨‍🌾</div><div class="stat-info"><div class="stat-num" id="totalFarmers">0</div><div class="stat-label">Farmers</div></div></article>
+        <article class="stat-card orange"><div class="stat-icon">🛒</div><div class="stat-info"><div class="stat-num" id="totalBuyers">0</div><div class="stat-label">Buyers</div></div></article>
+        <article class="stat-card purple"><div class="stat-icon">👑</div><div class="stat-info"><div class="stat-num" id="totalAdmins">0</div><div class="stat-label">Admins</div></div></article>
+        <article class="stat-card green"><div class="stat-icon">🌱</div><div class="stat-info"><div class="stat-num" id="totalProducts">0</div><div class="stat-label">Products</div></div></article>
+        <article class="stat-card blue"><div class="stat-icon">📦</div><div class="stat-info"><div class="stat-num" id="totalOrders">0</div><div class="stat-label">All Orders</div></div></article>
+      </div>
+
+      <div class="dashboard-two-column">
+        <div class="recent-section">
+          <div class="section-header"><h2>Recent Users</h2><button class="btn-secondary compact-btn" type="button" onclick="showSection('users')">View all</button></div>
+          <div id="recentUsers" class="stack-list"><div class="empty-state"><div class="empty-icon">👥</div><p>Loading users...</p></div></div>
+        </div>
+        <div class="recent-section">
+          <div class="section-header"><h2>Operations Snapshot</h2><button class="btn-secondary compact-btn" type="button" onclick="refreshAdminData()">↻ Refresh</button></div>
+          <div id="operationsSnapshot" class="analytics-panel"><p>Loading platform data...</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="sec-users">
+      <div class="section-header">
+        <div><h2>👥 Users & Administrators</h2><p class="section-subtitle">Create accounts, promote roles and remove accounts safely.</p></div>
+        <button class="btn-primary" type="button" onclick="openCreateUser()">＋ Create Account</button>
+      </div>
+      <div class="filter-row">
+        <input id="userSearch" type="search" placeholder="Search name, email or location" oninput="applyUserFilters()">
+        <select id="userRoleFilter" onchange="applyUserFilters()">
+          <option value="all">All roles</option><option value="admin">Admins</option><option value="farmer">Farmers</option><option value="buyer">Buyers</option>
+        </select>
+      </div>
+      <div id="usersTable"><div class="empty-state"><div class="empty-icon">👥</div><p>Loading users...</p></div></div>
+    </section>
+
+    <section class="section" id="sec-products">
+      <div class="section-header">
+        <div><h2>🌱 All Product Listings</h2><p class="section-subtitle">Review active and out-of-stock crop listings, including farmer photos.</p></div>
+        <button class="btn-secondary" type="button" onclick="loadAllProductsAdmin()">↻ Refresh</button>
+      </div>
+      <div class="filter-row">
+        <input id="adminProductSearch" type="search" placeholder="Search product, farmer or location" oninput="applyProductFilters()">
+        <select id="adminProductAvailability" onchange="applyProductFilters()"><option value="all">All availability</option><option value="available">Available</option><option value="unavailable">Out of stock</option></select>
+      </div>
+      <div class="products-grid" id="adminProductsGrid"><div class="empty-state"><div class="empty-icon">🌱</div><p>Loading products...</p></div></div>
+    </section>
+
+    <section class="section" id="sec-orders">
+      <div class="section-header"><div><h2>📦 Platform Orders</h2><p class="section-subtitle">Monitor direct purchases and the multi-farmer fulfillment workflow.</p></div><button class="btn-secondary" type="button" onclick="loadOrderData()">↻ Refresh</button></div>
+      <h3 class="order-group-title">🤝 Multi-Farmer Bulk Orders</h3>
+      <div id="adminBulkOrdersList"><div class="empty-state"><div class="empty-icon">🤝</div><p>Loading bulk orders...</p></div></div>
+      <h3 class="order-group-title">📦 Direct Orders</h3>
+      <div id="adminOrdersList"><div class="empty-state"><div class="empty-icon">📦</div><p>Loading direct orders...</p></div></div>
+    </section>
+
+    <section class="section" id="sec-bookings">
+      <div class="section-header"><div><h2>🚜 Equipment Bookings</h2><p class="section-subtitle">Confirm, complete or cancel buyer service requests.</p></div><button class="btn-secondary" type="button" onclick="loadAdminBookings()">↻ Refresh</button></div>
+      <div id="adminBookingsList"><div class="empty-state"><div class="empty-icon">🚜</div><p>Loading bookings...</p></div></div>
+    </section>
+
+    <section class="section" id="sec-analytics">
+      <div class="section-header"><div><h2>📈 Analytics</h2><p class="section-subtitle">Live totals generated from users, inventory, orders and bookings.</p></div></div>
+      <div class="stats-grid">
+        <article class="stat-card green"><div class="stat-icon">📦</div><div class="stat-info"><div class="stat-num" id="analyticsOrders">0</div><div class="stat-label">Direct Orders</div></div></article>
+        <article class="stat-card blue"><div class="stat-icon">🤝</div><div class="stat-info"><div class="stat-num" id="analyticsBulkOrders">0</div><div class="stat-label">Bulk Orders</div></div></article>
+        <article class="stat-card orange"><div class="stat-icon">💰</div><div class="stat-info"><div class="stat-num" id="analyticsRevenue">₹0</div><div class="stat-label">Confirmed Value</div></div></article>
+        <article class="stat-card purple"><div class="stat-icon">🚜</div><div class="stat-info"><div class="stat-num" id="analyticsBookings">0</div><div class="stat-label">Equipment Bookings</div></div></article>
+      </div>
+      <div id="analyticsBreakdown" class="analytics-panel"><p>Loading analytics...</p></div>
+    </section>
+
+    <section class="section" id="sec-settings">
+      <h2>⚙️ Admin Profile & Security</h2>
+      <div class="profile-card">
+        <div class="profile-avatar-large admin-avatar" id="profileAvatar">A</div>
+        <div class="profile-info"><h3 id="profileName">Admin</h3><p id="profileEmail"></p><p id="profileLocation">📍 Location not added</p><p id="profilePhone">📱 Phone not added</p><span class="role-badge admin-role-badge">👑 Admin</span></div>
+      </div>
+      <div class="dashboard-two-column settings-grid">
+        <form class="dashboard-form" id="profileForm">
+          <h3>Edit Profile</h3>
+          <label>Full name<input id="profileNameInput" required maxlength="80"></label>
+          <label>Phone<input id="profilePhoneInput" maxlength="20"></label>
+          <label>Location<input id="profileLocationInput" maxlength="160"></label>
+          <label>Preferred language<select id="profileLanguageInput"><option value="gu">Gujarati</option><option value="en">English</option><option value="hi">Hindi</option></select></label>
+          <button class="btn-primary full-width-btn" id="saveProfileBtn" type="submit">Save Profile</button>
+        </form>
+        <form class="dashboard-form" id="passwordForm">
+          <h3>Change Password</h3>
+          <label>Current password<input id="currentPassword" type="password" required autocomplete="current-password"></label>
+          <label>New password<input id="newPassword" type="password" minlength="6" maxlength="72" required autocomplete="new-password"></label>
+          <label>Confirm new password<input id="confirmNewPassword" type="password" minlength="6" maxlength="72" required autocomplete="new-password"></label>
+          <button class="btn-primary full-width-btn" id="changePasswordBtn" type="submit">Change Password</button>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <div class="modal-overlay" id="createUserModal">
+    <div class="modal">
+      <div class="modal-header">
+        <div><h3>Create Account</h3><p class="modal-subtitle">Create a buyer, farmer or additional administrator.</p></div>
+        <button class="modal-close" type="button" onclick="closeModal()">×</button>
+      </div>
+      <div class="modal-body">
+        <form id="createUserForm" class="dashboard-form modal-form">
+          <label>Full name<input id="newUserName" required maxlength="80"></label>
+          <label>Email<input id="newUserEmail" type="email" required autocomplete="off"></label>
+          <label>Temporary password<input id="newUserPassword" type="password" minlength="6" maxlength="72" required autocomplete="new-password"></label>
+          <label>Role<select id="newUserRole" required><option value="buyer">Buyer</option><option value="farmer">Farmer</option><option value="admin">Admin</option></select></label>
+          <label>Phone<input id="newUserPhone" maxlength="20"></label>
+          <label>Location<input id="newUserLocation" maxlength="160"></label>
+          <button class="btn-primary full-width-btn" id="createUserBtn" type="submit">Create Account</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script src="../js/common.js"></script>
+  <script src="../js/i18n.js"></script>
+  <script src="../js/dashboard.js"></script>
+  <script src="../js/admin.js"></script>
+</body>
+</html>

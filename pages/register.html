@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Register — KhedutConnect</title>
+  <link rel="stylesheet" href="../css/auth.css">
+</head>
+<body>
+  <main class="auth-container">
+    <div class="auth-header">
+      <div class="auth-logo">
+        <img src="../assets/khedut-logo.png" alt="KhedutConnect" width="72" height="72">
+      </div>
+      <h1>Join KhedutConnect</h1>
+      <p>Create a buyer, farmer, or first admin account</p>
+    </div>
+
+    <form class="auth-body" id="registerForm" novalidate>
+      <div class="role-selector" aria-label="Account type">
+        <button type="button" class="role-btn active" data-role="buyer" onclick="selectRole('buyer', this)">
+          <span class="role-icon">🛒</span><span class="role-name">Buyer</span>
+        </button>
+        <button type="button" class="role-btn" data-role="farmer" onclick="selectRole('farmer', this)">
+          <span class="role-icon">👨‍🌾</span><span class="role-name">Farmer</span>
+        </button>
+        <button type="button" class="role-btn" data-role="admin" onclick="selectRole('admin', this)">
+          <span class="role-icon">👑</span><span class="role-name">Admin</span>
+        </button>
+      </div>
+
+      <div class="error-msg" id="errorMsg" role="alert"></div>
+      <div class="success-msg" id="successMsg" role="status"></div>
+
+      <div class="form-group">
+        <label for="name">👤 Full Name *</label>
+        <div class="input-icon"><span>👤</span><input type="text" id="name" autocomplete="name" placeholder="Enter your full name" required></div>
+      </div>
+      <div class="form-group">
+        <label for="email">📧 Email Address *</label>
+        <div class="input-icon"><span>📧</span><input type="email" id="email" autocomplete="email" placeholder="Enter your email" required></div>
+      </div>
+      <div class="form-group">
+        <label for="phone">📱 Phone Number</label>
+        <div class="input-icon"><span>📱</span><input type="tel" id="phone" autocomplete="tel" placeholder="Enter your phone number"></div>
+      </div>
+      <div class="form-group">
+        <label for="location">📍 Location</label>
+        <div class="input-icon"><span>📍</span><input type="text" id="location" autocomplete="address-level2" placeholder="Village, city or district"></div>
+      </div>
+      <div class="form-group">
+        <label for="password">🔒 Password *</label>
+        <div class="input-icon"><span>🔒</span><input type="password" id="password" autocomplete="new-password" placeholder="Minimum 6 characters" required></div>
+      </div>
+      <div class="form-group">
+        <label for="confirmPassword">🔒 Confirm Password *</label>
+        <div class="input-icon"><span>🔒</span><input type="password" id="confirmPassword" autocomplete="new-password" placeholder="Confirm your password" required></div>
+      </div>
+
+      <div class="form-group admin-setup-group" id="adminSetupGroup" hidden>
+        <label for="adminSetupKey">🔑 Admin Setup Key *</label>
+        <div class="input-icon"><span>🔑</span><input type="password" id="adminSetupKey" autocomplete="off" placeholder="Value of ADMIN_SETUP_KEY"></div>
+        <p class="field-help" id="adminSetupHelp"></p>
+      </div>
+
+      <button class="btn-auth" type="submit">Create Account →</button>
+      <div class="divider">or</div>
+      <div class="auth-footer">Already have an account? <a href="login.html">Login here</a></div>
+    </form>
+  </main>
+
+  <script src="../js/common.js"></script>
+  <script src="../js/i18n.js"></script>
+  <script src="../js/auth.js"></script>
+</body>
+</html>

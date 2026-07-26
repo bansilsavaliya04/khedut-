@@ -1,0 +1,22 @@
+{
+  "name": "KhedutConnect",
+  "short_name": "KhedutConnect",
+  "description": "Connecting Farmers with Buyers directly",
+  "start_url": "/index.html",
+  "display": "standalone",
+  "background_color": "#1a7a2e",
+  "theme_color": "#1a7a2e",
+  "orientation": "portrait-primary",
+  "shortcuts": [
+    {
+      "name": "Browse Products",
+      "url": "/pages/buyer-dashboard.html",
+      "description": "Browse fresh products"
+    },
+    {
+      "name": "Farmer Dashboard",
+      "url": "/pages/farmer-dashboard.html",
+      "description": "Manage your products"
+    }
+  ]
+}

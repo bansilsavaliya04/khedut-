@@ -1,0 +1,14 @@
+{
+  "name": "farmconnect-hackathon",
+  "version": "2.0.0",
+  "private": true,
+  "scripts": {
+    "start": "npm --prefix backend start",
+    "dev": "npm --prefix backend run dev",
+    "seed:demo": "npm --prefix backend run seed:demo",
+    "test": "npm --prefix backend test"
+  },
+  "dependencies": {
+    "mongodb": "^7.5.0"
+  }
+}

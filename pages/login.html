@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login — KhedutConnect</title>
+  <link rel="stylesheet" href="../css/auth.css">
+</head>
+<body>
+  <main class="auth-container">
+    <div class="auth-header">
+      <div class="auth-logo">
+        <img src="../assets/khedut-logo.png" alt="KhedutConnect" width="72" height="72">
+      </div>
+      <h1>KhedutConnect</h1>
+      <p>Farmers and buyers, directly connected</p>
+    </div>
+
+    <form class="auth-body" id="loginForm" novalidate>
+      <div class="auth-role-note">Your dashboard is selected automatically from your account role.</div>
+      <div class="error-msg" id="errorMsg" role="alert"></div>
+      <div class="success-msg" id="successMsg" role="status"></div>
+
+      <div class="form-group">
+        <label for="email">📧 Email Address</label>
+        <div class="input-icon">
+          <span>📧</span>
+          <input type="email" id="email" autocomplete="email" placeholder="Enter your email" required>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="password">🔒 Password</label>
+        <div class="input-icon">
+          <span>🔒</span>
+          <input type="password" id="password" autocomplete="current-password" placeholder="Enter your password" required>
+        </div>
+      </div>
+
+      <button class="btn-auth" type="submit">Login →</button>
+
+      <div class="divider">or</div>
+      <div class="auth-footer">
+        Don&apos;t have an account? <a href="register.html">Register here</a>
+      </div>
+      <div class="auth-footer" style="margin-top:10px">
+        <a href="../index.html">← Back to home</a>
+      </div>
+    </form>
+  </main>
+
+  <script src="../js/common.js"></script>
+  <script src="../js/i18n.js"></script>
+  <script src="../js/auth.js"></script>
+</body>
+</html>
